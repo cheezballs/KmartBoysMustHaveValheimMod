@@ -1,0 +1,16 @@
+<Project>
+  <!--
+    Copy this file to Local.props (same folder) and edit the paths for your machine.
+    Local.props is git-ignored. You only need it if your paths differ from the defaults below.
+  -->
+  <PropertyGroup>
+    <!-- Valheim install folder (the one containing valheim.exe) -->
+    <ValheimDir>C:\Program Files (x86)\Steam\steamapps\common\Valheim</ValheimDir>
+
+    <!-- BepInEx folder of the mod manager profile you play with -->
+    <BepInExDir>$(APPDATA)\Thunderstore Mod Manager\DataFolder\Valheim\profiles\Default\BepInEx</BepInExDir>
+
+    <!-- Set to false to stop builds from copying the DLL into that profile -->
+    <DeployToProfile>true</DeployToProfile>
+  </PropertyGroup>
+</Project>

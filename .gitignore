@@ -107,3 +107,13 @@ InitTestScene*.unity*
 
 # Auto-generated cache in Assets folder
 /[Aa]ssets/[Ss]ceneDependencyCache*
+
+# K-MartBoysMustHaveMod build output
+bin/
+obj/
+dist/
+Local.props
+.idea/workspace.xml
+# The Unity template above ignores project files; this repo needs them
+!*.csproj
+!*.sln

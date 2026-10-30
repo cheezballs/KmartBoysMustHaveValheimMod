@@ -1,0 +1,78 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!--
+    Machine-specific paths. Copy Local.props.example (repo root) to Local.props to override,
+    or pass them on the command line: dotnet build -p:ValheimDir="D:\Games\Valheim"
+  -->
+  <Import Project="..\..\Local.props" Condition="Exists('..\..\Local.props')" />
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.1</TargetFramework>
+    <AssemblyName>K-MartBoysMustHaveMod</AssemblyName>
+    <RootNamespace>KMartBoysMustHaveMod</RootNamespace>
+    <!-- Keep in sync with PluginVersion in Plugin.cs and version_number in thunderstore/manifest.json -->
+    <Version>1.5.0</Version>
+    <LangVersion>9.0</LangVersion>
+    <Nullable>disable</Nullable>
+    <ImplicitUsings>disable</ImplicitUsings>
+
+    <!-- Compile against the game's own runtime libraries (Unity Mono), not a .NET targeting pack. -->
+    <DisableImplicitFrameworkReferences>true</DisableImplicitFrameworkReferences>
+    <NoStdLib>true</NoStdLib>
+    <NoWarn>$(NoWarn);CS1701;CS1702;MSB3277</NoWarn>
+
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <CopyLocalLockFileAssemblies>false</CopyLocalLockFileAssemblies>
+    <GenerateDocumentationFile>false</GenerateDocumentationFile>
+    <DebugType>none</DebugType>
+    <Deterministic>true</Deterministic>
+
+    <ValheimDir Condition="'$(ValheimDir)' == ''">C:\Program Files (x86)\Steam\steamapps\common\Valheim</ValheimDir>
+    <BepInExDir Condition="'$(BepInExDir)' == ''">$(APPDATA)\Thunderstore Mod Manager\DataFolder\Valheim\profiles\Default\BepInEx</BepInExDir>
+    <ManagedDir>$(ValheimDir)\valheim_Data\Managed</ManagedDir>
+
+    <!-- Copy the built DLL into the mod manager profile after every build. -->
+    <DeployToProfile Condition="'$(DeployToProfile)' == ''">true</DeployToProfile>
+
+    <RepoRoot>$(MSBuildThisFileDirectory)..\..\</RepoRoot>
+    <ThunderstoreDir>$(RepoRoot)thunderstore\</ThunderstoreDir>
+    <DistDir>$(RepoRoot)dist\</DistDir>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- Every game/Unity assembly (includes Unity's mscorlib + netstandard). -->
+    <Reference Include="$(ManagedDir)\*.dll" Private="false" />
+    <Reference Include="$(BepInExDir)\core\BepInEx.dll" Private="false" />
+    <Reference Include="$(BepInExDir)\core\0Harmony.dll" Private="false" />
+  </ItemGroup>
+
+  <Target Name="CheckGamePaths" BeforeTargets="ResolveAssemblyReferences">
+    <Error Condition="!Exists('$(ManagedDir)\assembly_valheim.dll')"
+           Text="Valheim not found at '$(ValheimDir)'. Set ValheimDir in Local.props (see Local.props.example)." />
+    <Error Condition="!Exists('$(BepInExDir)\core\BepInEx.dll')"
+           Text="BepInEx not found at '$(BepInExDir)'. Set BepInExDir in Local.props (see Local.props.example)." />
+  </Target>
+
+  <Target Name="DeployToProfile" AfterTargets="Build" Condition="'$(DeployToProfile)' == 'true'">
+    <Copy SourceFiles="$(TargetPath)" DestinationFolder="$(BepInExDir)\plugins\K-MartBoysMustHaveMod" />
+    <Message Importance="high" Text="Deployed $(TargetFileName) to $(BepInExDir)\plugins\K-MartBoysMustHaveMod" />
+  </Target>
+
+  <!-- Release builds also produce the Thunderstore upload zip in dist\ -->
+  <Target Name="PackageThunderstore" AfterTargets="Build" Condition="'$(Configuration)' == 'Release'">
+    <PropertyGroup>
+      <PackageStage>$(BaseIntermediateOutputPath)thunderstore-package\</PackageStage>
+      <PackageZip>$(DistDir)KMartBoysMustHaveMod-$(Version).zip</PackageZip>
+    </PropertyGroup>
+    <ItemGroup>
+      <PackageFiles Include="$(ThunderstoreDir)manifest.json;$(ThunderstoreDir)icon.png;$(ThunderstoreDir)README.md;$(ThunderstoreDir)CHANGELOG.md;$(TargetPath)" />
+    </ItemGroup>
+    <RemoveDir Directories="$(PackageStage)" />
+    <Copy SourceFiles="@(PackageFiles)" DestinationFolder="$(PackageStage)" />
+    <MakeDir Directories="$(DistDir)" />
+    <Delete Files="$(PackageZip)" />
+    <ZipDirectory SourceDirectory="$(PackageStage)" DestinationFile="$(PackageZip)" />
+    <Message Importance="high" Text="Thunderstore package: $(PackageZip)" />
+  </Target>
+
+</Project>

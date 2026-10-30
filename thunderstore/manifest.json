@@ -1,0 +1,9 @@
+{
+  "name": "KMartBoysMustHaveMod",
+  "version_number": "1.5.0",
+  "website_url": "https://github.com/cheezballs/KmartBoysMustHaveValheimMod",
+  "description": "Press F6 to dump your inventory into nearby chests that already hold the same items. Lock slots, see how much of each material you have stored when crafting, and get yelled at with encouragement. Great Job, Jackass.",
+  "dependencies": [
+    "denikson-BepInExPack_Valheim-5.4.2360"
+  ]
+}
