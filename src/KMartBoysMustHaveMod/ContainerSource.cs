@@ -120,7 +120,9 @@ namespace KMartBoysMustHaveMod
             return Remove(GetContainers(), name, amount, itemQuality, worldLevelBased);
         }
 
-        public static int Remove(List<Container> containers, string name, int amount, int itemQuality, bool worldLevelBased)
+        // keepPerContainer: leave at least this many in every container (so it still "matches" for auto-deposit).
+        public static int Remove(List<Container> containers, string name, int amount, int itemQuality, bool worldLevelBased,
+            int keepPerContainer = 0)
         {
             int remaining = amount;
             foreach (Container c in containers)
@@ -130,14 +132,14 @@ namespace KMartBoysMustHaveMod
                 Inventory inv = c.GetInventory();
                 if (inv == null) continue;
 
-                int available = inv.CountItems(name, itemQuality, worldLevelBased);
+                int inChest = inv.CountItems(name, itemQuality, worldLevelBased);
+                int available = inChest - Math.Max(0, keepPerContainer);
                 if (available <= 0) continue;
                 if (!ClaimOwnership(c)) continue;
 
                 int take = Math.Min(available, remaining);
-                int before = available;
                 inv.RemoveItem(name, take, itemQuality, worldLevelBased);
-                int removed = before - inv.CountItems(name, itemQuality, worldLevelBased);
+                int removed = inChest - inv.CountItems(name, itemQuality, worldLevelBased);
                 remaining -= Math.Max(0, removed);
             }
 

@@ -10,7 +10,10 @@
     <!-- BepInEx folder of the mod manager profile you play with -->
     <BepInExDir>$(APPDATA)\Thunderstore Mod Manager\DataFolder\Valheim\profiles\Default\BepInEx</BepInExDir>
 
-    <!-- Set to false to stop builds from copying the DLL into that profile -->
+    <!--
+      true = copy each build into that profile's plugins folder (default).
+      Don't also install the Thunderstore version in that profile, or two copies load.
+    -->
     <DeployToProfile>true</DeployToProfile>
   </PropertyGroup>
 </Project>

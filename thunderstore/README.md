@@ -14,9 +14,11 @@
 - .stsehc tseraen eht neht ,tsrif desu si yrotnevni ruoY .uoy raen sreniatnoc morf slairetam gnisu dliub dna edargpu ,tfarC
 - .stsehc emas esoht morf yllacitamotua deleufer teg uoy raen sretlems dna snevo ,sbut toh ,sehcrot ,sreizarb ,shtraeh ,seriF
 - .oot stsehc esoht morf xalf dna yelrab ,doow ,eussit tfos ,parcs ,ero htiw dellif teg sleehw gninnips dna sllimdniw ,snlik ,seirenifer rtie ,secanruf tsalb ,sretlemS
-- .sexob egarots ruoy ni gnittis era ynam woh dna yrrac uoy ynam woh swohs lairetam deriuqer yreve ,noitats gnitfarc a tA
+- .02/521 ekil ,deen uoy ynam woh ot txen stsehc dna gab ruoy ssorca evah uoy ynam woh swohs tneidergni yreve ,noitats gnitfarc a tA
+- .thgiew ro rewop ,ytilauq ,eulav ,epyt ,eman yb stros tsehc yreve dna yrotnevni ruoy no nottub troS A
 - .og eno ni ,xif nac noitats eht taht raeg ruoy lla sriaper noitats gnitfarc a gninepO
 - .neercs ruoy fo pot eht ta stis rehtaew tnerruc eht dna MP/MA htiw kcolc ruoh-21 A
+- .dedeen si dom revres on dna ,meht sees dom eht htiw enoyrevE .spihs ruoy eman dna ,srennab dna slias pihs ruoy no tenretni eht morf egami yna tuP
 - .yojne ot enoyreve rof tahc ni "AHAHAHAHAHAH DEID I DNA TOIDI NA SAW I" tuohs uoy ,eid uoy nehW
 - .revres a no neve ,ti deen uoy ylnO .ylno edis tneilC
 
@@ -27,6 +29,9 @@
 | 6F | stsehc gnihctam ybraen otni tisopeD |
 | )nepo yrotnevni( kcilc-elddiM | tols a kcolnu ro kcoL |
 | noitats gnitfarc a nepo tsuJ | slairetam derots eeS |
+| )edom tros eht egnahc ot kcilc-thgir( troS kcilC | tsehc ro yrotnevni troS |
+| rennab ro pihs eht no esU + lrtC tfeL | egami rennab ro lias a teS |
+| pihs eht no esU + tfihS + lrtC tfeL | pihs a emaN |
 
 ## gifnoC
 
@@ -38,9 +43,11 @@
 - gnidrow fo tib yreve sulp ,ffo/no segassem yrammus dna retnec **:segasseM**
 - egassem dna tnuoc meti muminim nwo sti htiw hcae ,sreit xis **:sreiT egasseM retneC**
 - sroloc tnemeriuqer ,stsehc tliub-reyalp ylno ,spihs dna strac erongi ,suidar reniatnoc ,ffo/no gnidliub ,ffo/no **:sreniatnoC morF tfarC**
-- stcejbo dedulcxe ,leuf yrotnevni esu ,evreser leuf ,dlohserht llifer ,selggot leehw gninnips/llimdniw/nlik/yrenifer/ero ,selggot sretlems/snevo/serif ,suidar ,lavretni kcehc ,ffo/no **:leufeR otuA**
+- stcejbo dedulcxe ,leuf yrotnevni esu ,tsehc hcae ni 1 evael ,evreser leuf ,dlohserht llifer ,selggot leehw gninnips/llimdniw/nlik/yrenifer/ero ,selggot sretlems/snevo/serif ,suidar ,lavretni kcehc ,ffo/no **:leufeR otuA**
 - ffo/no egassem riaper ,ffo/no **:riapeR otuA**
 - roloc ,ezis tnof ,tesffo ,noitisop ,gnidnuor etunim ,)}yad{ ,}snoitidnoc{ ,}rehtaew{ ,}emit{( txet ,ffo/no **:kcolC**
+- roloc dna ezis ,thgieh ,ecnatsid eman gnitaolf ,seman pihs ,segami rennab pilf/tif ,egami lias etirovaf ,tsil reyalp detsurt ,ydobon / sreyalp detsurt / enoyreve morf segami wohs ,yek tide **:srennaB & spihS**
+- snoitisop nottub ,skcats egrem ,ecalp ni rabtoh peek ,edom tros ,ffo/no **:gnitroS**
 - tahc ybraen ro tuohs ,)eman ruoy = }eman{ ,modnar ta dekcip eno ,| yb detarapes lareves( segassem nwo ruoy ,ffo/no **:egasseM htaeD**
 - etar hserfer ,suidar egarots ,noitisop ,ezis tnof ,sroloc ,tamrof txet ,oot unem dliub ,ffo/no **:kcotS gnitfarC**
 

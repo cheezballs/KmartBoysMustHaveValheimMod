@@ -102,27 +102,43 @@ namespace KMartBoysMustHaveMod
         {
             Transform root = Hud.instance.m_rootObject.transform;
             Transform existing = root.Find(ObjectName);
-            GameObject go = existing != null
-                ? existing.gameObject
-                : new GameObject(ObjectName, typeof(RectTransform), typeof(TextMeshProUGUI));
-            if (existing == null) go.transform.SetParent(root, false);
-
-            _text = go.GetComponent<TextMeshProUGUI>();
+            if (existing != null)
+            {
+                _text = existing.GetComponent<TextMeshProUGUI>();
+            }
+            else
+            {
+                _text = CreateHudText(ObjectName, root);
+            }
+            if (_text == null) return;
+            GameObject go = _text.gameObject;
             _text.raycastTarget = false;
             _text.richText = true;
             _text.enableAutoSizing = false;
             _text.overflowMode = TextOverflowModes.Overflow;
 
-            // Borrow the game's HUD font so the clock looks native.
-            TMP_Text source = Hud.instance.m_hoverName;
-            if (source != null && source.font != null)
-            {
-                _text.font = source.font;
-                _text.fontSharedMaterial = source.fontSharedMaterial;
-            }
-
             ((RectTransform)go.transform).sizeDelta = new Vector2(600f, 40f);
             ApplyLayout();
+        }
+
+        // Creates a HUD text object that already has the game's font before it wakes up
+        // (avoids TextMeshPro's "font asset not found" warning).
+        internal static TextMeshProUGUI CreateHudText(string name, Transform parent)
+        {
+            GameObject go = new GameObject(name);
+            go.SetActive(false);
+            go.AddComponent<RectTransform>();
+            go.transform.SetParent(parent, false);
+            TextMeshProUGUI t = go.AddComponent<TextMeshProUGUI>();
+
+            TMP_Text source = Hud.instance != null ? Hud.instance.m_hoverName : null;
+            if (source != null && source.font != null)
+            {
+                t.font = source.font;
+                t.fontSharedMaterial = source.fontSharedMaterial;
+            }
+            go.SetActive(true);
+            return t;
         }
 
         private static void ApplyLayout()

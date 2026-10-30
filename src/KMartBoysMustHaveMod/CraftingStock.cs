@@ -9,6 +9,12 @@ using UnityEngine;
 
 namespace KMartBoysMustHaveMod
 {
+    public enum StockDisplayMode
+    {
+        InSlotNumber,
+        LineBelowSlot
+    }
+
     // ------------------------------------------------------------------
     // Crafting stock: under every required material at a crafting station,
     // show how many you carry and how many are sitting in storage boxes.
@@ -133,23 +139,34 @@ namespace KMartBoysMustHaveMod
                             && elementRoot != null && req != null && req.m_resItem != null && player != null;
 
                 TMP_Text label = FindLabel(elementRoot);
-                if (!show)
+                bool belowSlot = KMartBoysPlugin.StockDisplay.Value == StockDisplayMode.LineBelowSlot;
+                if (!show || !belowSlot)
                 {
                     if (label != null) label.gameObject.SetActive(false);
-                    return;
                 }
+                if (!show) return;
 
                 TMP_Text amountText = FindAmountText(elementRoot);
-                if (label == null) label = CreateLabel(elementRoot, amountText);
-                if (label == null) return;
-
-                LogLayoutOnce(elementRoot);
-
                 string itemName = req.m_resItem.m_itemData.m_shared.m_name;
                 int need = ReadNeed(amountText, req, quality, craftMultiplier);
                 int have = StorageStock.CountInInventory(player, itemName);
                 int stored = StorageStock.Get(itemName);
                 int total = have + stored;
+
+                if (!belowSlot)
+                {
+                    // Write into the slot's own amount number (always visible; keeps the game's red/white coloring).
+                    if (amountText != null)
+                    {
+                        amountText.text = Format(KMartBoysPlugin.StockAmountFormat.Value, need, have, stored, total);
+                        amountText.overflowMode = TextOverflowModes.Overflow;
+                    }
+                    return;
+                }
+
+                if (label == null) label = CreateLabel(elementRoot, amountText);
+                if (label == null) return;
+                LogLayoutOnce(elementRoot);
 
                 label.text = Format(KMartBoysPlugin.StockFormat.Value, need, have, stored, total);
                 label.color = total >= need ? KMartBoysPlugin.StockEnoughColor.Value : KMartBoysPlugin.StockShortColor.Value;
@@ -192,8 +209,7 @@ namespace KMartBoysMustHaveMod
             }
             else
             {
-                go = new GameObject(LabelName, typeof(RectTransform), typeof(TextMeshProUGUI));
-                go.transform.SetParent(elementRoot, false);
+                go = ClockHud.CreateHudText(LabelName, elementRoot).gameObject;
             }
             go.name = LabelName;
 
@@ -243,7 +259,9 @@ namespace KMartBoysMustHaveMod
         private static int ReadNeed(TMP_Text amountText, Piece.Requirement req, int quality, int craftMultiplier)
         {
             int parsed;
-            if (amountText != null && int.TryParse(StripTags(amountText.text), NumberStyles.Integer,
+            // The game rewrites this text with the plain amount each time; ignore our own "x/y" form.
+            if (amountText != null && amountText.text != null && amountText.text.IndexOf('/') < 0 &&
+                int.TryParse(StripTags(amountText.text), NumberStyles.Integer,
                     CultureInfo.InvariantCulture, out parsed))
                 return parsed;
             return req.GetAmount(quality) * Math.Max(1, craftMultiplier);

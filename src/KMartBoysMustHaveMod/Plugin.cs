@@ -9,6 +9,8 @@
 //   * Announces your deaths in chat
 //   * Auto-repairs your gear when you open a crafting station
 //   * 12-hour in-game clock with the current weather
+//   * Sort buttons on inventory and chests (name, type, value, quality, power, weight)
+//   * Custom sail / banner images from a URL and ship names (synced, no server mod)
 //   * Everything configurable, Configuration Manager friendly, live config reload
 
 using System;
@@ -28,7 +30,7 @@ namespace KMartBoysMustHaveMod
     {
         public const string PluginGuid = "matt.valheim.kmartboysmusthavemod";
         public const string PluginName = "K-MartBoysMustHaveMod";
-        public const string PluginVersion = "1.10.0";
+        public const string PluginVersion = "1.13.1";
 
         internal static KMartBoysPlugin Instance;
 
@@ -56,6 +58,8 @@ namespace KMartBoysMustHaveMod
         internal static ConfigEntry<bool> StockEnabled;
         internal static ConfigEntry<bool> StockInBuildMenu;
         internal static ConfigEntry<string> StockFormat;
+        internal static ConfigEntry<StockDisplayMode> StockDisplay;
+        internal static ConfigEntry<string> StockAmountFormat;
         internal static ConfigEntry<Color> StockEnoughColor;
         internal static ConfigEntry<Color> StockShortColor;
         internal static ConfigEntry<float> StockFontSize;
@@ -78,6 +82,7 @@ namespace KMartBoysMustHaveMod
         internal static ConfigEntry<bool> RefuelSmelters;
         internal static ConfigEntry<float> RefuelBelowPercent;
         internal static ConfigEntry<int> RefuelKeepReserve;
+        internal static ConfigEntry<bool> RefuelLeaveOnePerChest;
         internal static ConfigEntry<bool> RefuelUseInventory;
         internal static ConfigEntry<string> RefuelExcluded;
         internal static ConfigEntry<bool> RefuelShowMessage;
@@ -99,6 +104,27 @@ namespace KMartBoysMustHaveMod
         internal static ConfigEntry<float> ClockOffsetY;
         internal static ConfigEntry<float> ClockFontSize;
         internal static ConfigEntry<Color> ClockColor;
+        internal static ConfigEntry<KeyCode> ShipEditModifier;
+        internal static ConfigEntry<CustomImageSource> ImagesFrom;
+        internal static ConfigEntry<string> TrustedPlayers;
+        internal static ConfigEntry<string> FavoriteSailUrl;
+        internal static ConfigEntry<bool> ApplyFavoriteWhenSteering;
+        internal static ConfigEntry<bool> ShipNamesEnabled;
+        internal static ConfigEntry<bool> ShowShipNameTags;
+        internal static ConfigEntry<float> ShipNameTagDistance;
+        internal static ConfigEntry<float> ShipNameTagHeight;
+        internal static ConfigEntry<float> ShipNameTagFontSize;
+        internal static ConfigEntry<Color> ShipNameTagColor;
+        internal static ConfigEntry<bool> SortEnabled;
+        internal static ConfigEntry<SortMode> SortModeSetting;
+        internal static ConfigEntry<bool> SortSkipHotbar;
+        internal static ConfigEntry<bool> SortMergeStacks;
+        internal static ConfigEntry<float> SortPlayerOffsetX;
+        internal static ConfigEntry<float> SortPlayerOffsetY;
+        internal static ConfigEntry<float> SortChestOffsetX;
+        internal static ConfigEntry<float> SortChestOffsetY;
+        internal static ConfigEntry<bool> BannerFitImage;
+        internal static ConfigEntry<bool> BannerFlipImage;
 
         private const int TierCount = 6;
         private static readonly int[] DefaultTierMin = { 1, 2, 10, 50, 200, 500 };
@@ -203,7 +229,13 @@ namespace KMartBoysMustHaveMod
                 "Under each required material at a crafting station, show how many you carry and how many are in your storage boxes.");
             StockInBuildMenu = Bind(stock, "ShowInBuildMenu", "Also show in build menu", false,
                 "Also show the stock line under build-piece requirements (hammer, hoe, cultivator).");
-            StockFormat = Bind(stock, "Format", "Stock text",
+            StockDisplay = Bind(stock, "Display", "Where to show it", StockDisplayMode.InSlotNumber,
+                "InSlotNumber = replace the number on each ingredient slot (always visible). " +
+                "LineBelowSlot = an extra line under the slot (can be cut off by the crafting panel).");
+            StockAmountFormat = Bind(stock, "SlotNumberFormat", "Slot number text", "{total}/{need}",
+                "Text for the ingredient slot's number when Display = InSlotNumber. Default shows have (bag + chests) / need. " +
+                "Placeholders: {need}, {have}, {stored}, {total}, {missing}.");
+            StockFormat = Bind(stock, "Format", "Line below slot text",
                 "{total} total\n<size=80%>{have} bag | {stored} box</size>",
                 "Text shown under each requirement. Placeholders: {need} = amount required, {have} = in your inventory, " +
                 "{stored} = in storage boxes, {total} = have + stored, {missing} = how many more you need (0 if enough). " +
@@ -270,6 +302,8 @@ namespace KMartBoysMustHaveMod
                 new AcceptableValueRange<float>(1f, 100f));
             RefuelKeepReserve = Bind(refuel, "KeepReserve", "Keep in reserve", 0,
                 "Leave at least this many of each fuel or input item (wood, ore, coal...) in your containers.", new AcceptableValueRange<int>(0, 10000));
+            RefuelLeaveOnePerChest = Bind(refuel, "LeaveOneInEachChest", "Leave 1 in each chest", true,
+                "Never take the last fuel/input item out of a chest, so F6 auto-deposit still knows that chest is where it goes.");
             RefuelUseInventory = Bind(refuel, "UseInventoryFuel", "Also use your inventory", false,
                 "If the containers run out, also take fuel and inputs (ore, wood...) from your own inventory.");
             RefuelExcluded = Bind(refuel, "ExcludedObjects", "Never refuel these", "",
@@ -307,6 +341,52 @@ namespace KMartBoysMustHaveMod
                 new AcceptableValueRange<float>(-2000f, 2000f));
             ClockFontSize = Bind(clock, "FontSize", "Font size", 22f, "Clock text size.", new AcceptableValueRange<float>(8f, 60f));
             ClockColor = Bind(clock, "Color", "Text color", new Color(1f, 0.93f, 0.75f, 1f), "Clock text color.");
+
+            const string ships = "12 - Ships & Banners";
+            ShipEditModifier = Bind(ships, "EditModifierKey", "Edit modifier key", KeyCode.LeftControl,
+                "Hold this while looking at a ship or banner: + Use sets the image, + Shift + Use names a ship. None = no key needed.");
+            ImagesFrom = Bind(ships, "ShowImagesFrom", "Show custom images from", CustomImageSource.Everyone,
+                "Everyone = show every custom sail/banner. TrustedPlayersOnly = only images set by you or the players listed below. " +
+                "Off = never download or show custom images. (Your game downloads the image from its URL, so that site sees your IP.)");
+            TrustedPlayers = Bind(ships, "TrustedPlayers", "Trusted players", "",
+                "Comma-separated character names whose images you'll see when ShowImagesFrom = TrustedPlayersOnly.");
+            FavoriteSailUrl = Bind(ships, "FavoriteSailUrl", "Favorite sail image URL", "",
+                "If set, this image is put on the sail when you take the helm of a ship.");
+            ApplyFavoriteWhenSteering = Bind(ships, "ApplyFavoriteWhenSteering", "Apply favorite when steering", true,
+                "Put your favorite sail image on any ship you start steering.");
+            ShipNamesEnabled = Bind(ships, "ShipNames", "Ship names", true, "Allow naming ships and show their names.");
+            ShowShipNameTags = Bind(ships, "ShowNameTags", "Floating ship names", true, "Show ship names floating above the ships.");
+            ShipNameTagDistance = Bind(ships, "NameTagDistance", "Name visible within (m)", 10f,
+                "Ship names only show when you're within this many meters of the ship.", new AcceptableValueRange<float>(1f, 300f));
+            ShipNameTagHeight = Bind(ships, "NameTagHeight", "Name height above ship (m)", 9f,
+                "How high above the ship the name floats.", new AcceptableValueRange<float>(0f, 40f));
+            ShipNameTagFontSize = Bind(ships, "NameTagFontSize", "Name font size", 26f, "Floating name size.",
+                new AcceptableValueRange<float>(8f, 60f));
+            BannerFitImage = Bind(ships, "BannerFitImage", "Fit image to banner", true,
+                "Show the whole custom image once across hanging banners (fixes the cut-in-half, mirrored look of the game's banner layout).");
+            BannerFlipImage = Bind(ships, "BannerFlipImage", "Flip banner image", false,
+                "Mirror custom banner images left-to-right. Turn on if your banner image shows up backwards.");
+            ShipNameTagColor = Bind(ships, "NameTagColor", "Name color", new Color(1f, 0.85f, 0.4f, 1f), "Floating name color.");
+
+            const string sorting = "13 - Sorting";
+            SortEnabled = Bind(sorting, "Enabled", "Sort buttons", true,
+                "Show a Sort button on your inventory and on open chests. Left-click sorts, right-click changes the sort mode.");
+            SortModeSetting = Bind(sorting, "Mode", "Sort by", SortMode.Name,
+                "Name = A to Z. Type = weapons, ammo, shields, armor, utility, tools, food, fish, materials, trophies. " +
+                "Value = most valuable stacks first. Quality = highest upgrade level first. " +
+                "Power = strongest damage / armor / block first. Weight = heaviest stacks first.");
+            SortSkipHotbar = Bind(sorting, "SkipHotbar", "Keep hotbar in place", true,
+                "Don't move items in your hotbar (top row) when sorting your inventory. Locked slots never move either.");
+            SortMergeStacks = Bind(sorting, "MergeStacks", "Merge partial stacks", true,
+                "Combine partial stacks of the same item while sorting.");
+            SortPlayerOffsetX = Bind(sorting, "InventoryButtonOffsetX", "Inventory button X", 0f,
+                "Move your inventory's Sort button left (-) or right (+).", new AcceptableValueRange<float>(-1500f, 1500f));
+            SortPlayerOffsetY = Bind(sorting, "InventoryButtonOffsetY", "Inventory button Y", 4f,
+                "Move your inventory's Sort button up (+) or down (-).", new AcceptableValueRange<float>(-1500f, 1500f));
+            SortChestOffsetX = Bind(sorting, "ChestButtonOffsetX", "Chest button X", 0f,
+                "Move the chest Sort button left (-) or right (+).", new AcceptableValueRange<float>(-1500f, 1500f));
+            SortChestOffsetY = Bind(sorting, "ChestButtonOffsetY", "Chest button Y", 4f,
+                "Move the chest Sort button up (+) or down (-).", new AcceptableValueRange<float>(-1500f, 1500f));
 
             _harmony = new Harmony(PluginGuid);
             _harmony.PatchAll(Assembly.GetExecutingAssembly());
@@ -414,6 +494,7 @@ namespace KMartBoysMustHaveMod
         {
             ReloadConfigIfChanged();
             ClockHud.Tick();
+            ShipNameTags.Tick();
             if (!ModEnabled.Value) return;
             Player player = Player.m_localPlayer;
             if (player == null) return;

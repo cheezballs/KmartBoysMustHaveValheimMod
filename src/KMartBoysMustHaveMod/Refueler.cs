@@ -218,17 +218,18 @@ namespace KMartBoysMustHaveMod
 
             int taken = 0;
 
+            int keepEach = KMartBoysPlugin.RefuelLeaveOnePerChest.Value ? 1 : 0;
             int inContainers = 0;
             foreach (Container c in pool.Containers)
             {
                 if (c == null) continue;
                 Inventory inv = c.GetInventory();
-                if (inv != null) inContainers += inv.CountItems(fuelName, -1, false);
+                if (inv != null) inContainers += Math.Max(0, inv.CountItems(fuelName, -1, false) - keepEach);
             }
             int usable = Math.Max(0, inContainers - Math.Max(0, KMartBoysPlugin.RefuelKeepReserve.Value));
             int fromContainers = Math.Min(usable, amount);
             if (fromContainers > 0)
-                taken += ContainerSource.Remove(pool.Containers, fuelName, fromContainers, -1, false);
+                taken += ContainerSource.Remove(pool.Containers, fuelName, fromContainers, -1, false, keepEach);
 
             if (taken < amount && pool.PlayerInventory != null)
             {

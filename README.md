@@ -13,7 +13,9 @@ A Valheim BepInEx mod for the K-Mart Boys. It's on Thunderstore as **KMartBoysMu
 - **Crafting stock:** at a crafting station, each required material shows how many you carry, how many are in your storage boxes, and the total. It's green when you have enough and orange when you're short.
 - **Auto repair:** opening a crafting station repairs everything in your inventory that the station can repair.
 - **Clock:** a 12-hour in-game clock with AM/PM and the current weather. Format, position, size and color are configurable.
+- **Ships & banners:** custom sail and banner images from a URL, and ship names floating above the ships. Values sync through the ship or banner itself, so no server mod is needed. Compatible with sails set by the old Gorko mod.
 - **Death announcements:** when you die, you shout "I WAS AN IDIOT AND I DIED HAHAHAHAHAHA" in chat. The messages are configurable.
+- **Sorting:** a Sort button on your inventory and on chests sorts by name, type, value, quality, power or weight. Right-click it to switch modes.
 - **Compatibility:** detects Equipment and Quick Slots and never touches its equipment, quick-slot or quiver cells.
 - **Safety:** skips graves, chests someone else has open, private chests you don't own, and chests in wards you can't access.
 - **Fully configurable:** every option works in Configuration Manager (F1), and editing the .cfg file while the game runs takes effect immediately.
@@ -32,6 +34,9 @@ src/KMartBoysMustHaveMod/      C# source + project file
   CraftFromContainers.cs       Craft / upgrade / build using container materials
   AutoRepair.cs                Repair everything when you open a crafting station
   ClockHud.cs                  12-hour clock + weather on the HUD
+  InventorySorter.cs           Sort buttons and sorting logic
+  ShipCustomization.cs         Custom sail/banner images, ship names, favorite sail
+  ShipNameTags.cs              Floating ship names on the HUD
   DeathMessage.cs              Chat announcement when you die
   Refueler.cs                  Auto-refill fuel and inputs (fires, ovens, smelters, refineries, kilns...)
   ModCompat.cs                 Equipment and Quick Slots soft compatibility
@@ -60,7 +65,7 @@ The project compiles against your own game files, so nothing from the game is st
 
 If your paths are different, copy `Local.props.example` to `Local.props` and edit it. `Local.props` is git-ignored.
 
-Every build copies `K-MartBoysMustHaveMod.dll` into that profile's `BepInEx\plugins\K-MartBoysMustHaveMod\` folder. To turn that off, set `DeployToProfile` to `false` in `Local.props`.
+Every build copies `K-MartBoysMustHaveMod.dll` into that profile's `BepInEx\plugins\K-MartBoysMustHaveMod\` folder, so you can build and launch straight away. Don't also install the Thunderstore version in the same profile, or two copies load. To turn the copy off, set `DeployToProfile` to `false` in `Local.props`.
 
 A **Release** build also creates the Thunderstore upload zip at `dist\KMartBoysMustHaveMod-<version>.zip`.
 

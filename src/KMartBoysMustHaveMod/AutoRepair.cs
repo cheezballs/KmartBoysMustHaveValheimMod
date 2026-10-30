@@ -18,11 +18,13 @@ namespace KMartBoysMustHaveMod
         private static readonly MethodInfo CanRepair =
             AccessTools.Method(typeof(InventoryGui), "CanRepair", new[] { typeof(ItemDrop.ItemData) });
 
-        private static void Postfix(CraftingStation __instance, Humanoid user, bool repeat, bool __result)
+        // Note: CraftingStation.Interact always returns false, even when it opens the station,
+        // so we check that the station actually became the player's current one instead.
+        private static void Postfix(CraftingStation __instance, Humanoid user, bool repeat)
         {
             try
             {
-                if (!__result || repeat) return;
+                if (repeat) return;
                 if (!KMartBoysPlugin.ModEnabled.Value || !KMartBoysPlugin.AutoRepairEnabled.Value) return;
                 if (KMartBoysPlugin.OtherRepairModLoaded) return;
 

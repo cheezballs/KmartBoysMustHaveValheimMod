@@ -11,7 +11,7 @@
     <AssemblyName>K-MartBoysMustHaveMod</AssemblyName>
     <RootNamespace>KMartBoysMustHaveMod</RootNamespace>
     <!-- Keep in sync with PluginVersion in Plugin.cs and version_number in thunderstore/manifest.json -->
-    <Version>1.10.0</Version>
+    <Version>1.13.1</Version>
     <LangVersion>9.0</LangVersion>
     <Nullable>disable</Nullable>
     <ImplicitUsings>disable</ImplicitUsings>
@@ -31,7 +31,11 @@
     <BepInExDir Condition="'$(BepInExDir)' == ''">$(APPDATA)\Thunderstore Mod Manager\DataFolder\Valheim\profiles\Default\BepInEx</BepInExDir>
     <ManagedDir>$(ValheimDir)\valheim_Data\Managed</ManagedDir>
 
-    <!-- Copy the built DLL into the mod manager profile after every build. -->
+    <!--
+      Copy every build into the profile's BepInEx\plugins\K-MartBoysMustHaveMod folder for testing.
+      Don't also install the Thunderstore version in the same profile, or two copies load.
+      Set to false in Local.props to turn off.
+    -->
     <DeployToProfile Condition="'$(DeployToProfile)' == ''">true</DeployToProfile>
 
     <RepoRoot>$(MSBuildThisFileDirectory)..\..\</RepoRoot>

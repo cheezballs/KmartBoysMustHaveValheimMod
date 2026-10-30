@@ -14,9 +14,11 @@ Press one key and everything in your bags that already lives in a nearby chest g
 - Craft, upgrade and build using materials from containers near you. Your inventory is used first, then the nearest chests.
 - Fires, hearths, braziers, torches, hot tubs, ovens and smelters near you get refueled automatically from those same chests.
 - Smelters, blast furnaces, eitr refineries, kilns, windmills and spinning wheels get filled with ore, scrap, soft tissue, wood, barley and flax from those chests too.
-- At a crafting station, every required material shows how many you carry and how many are sitting in your storage boxes.
+- At a crafting station, every ingredient shows how many you have across your bag and chests next to how many you need, like 125/20.
+- A Sort button on your inventory and every chest sorts by name, type, value, quality, power or weight.
 - Opening a crafting station repairs all your gear that the station can fix, in one go.
 - A 12-hour clock with AM/PM and the current weather sits at the top of your screen.
+- Put any image from the internet on your ship sails and banners, and name your ships. Everyone with the mod sees them, and no server mod is needed.
 - When you die, you shout "I WAS AN IDIOT AND I DIED HAHAHAHAHAHA" in chat for everyone to enjoy.
 - Client side only. Only you need it, even on a server.
 
@@ -27,6 +29,9 @@ Press one key and everything in your bags that already lives in a nearby chest g
 | Deposit into nearby matching chests | F6 |
 | Lock or unlock a slot | Middle-click (inventory open) |
 | See stored materials | Just open a crafting station |
+| Sort inventory or chest | Click Sort (right-click to change the sort mode) |
+| Set a sail or banner image | Left Ctrl + Use on the ship or banner |
+| Name a ship | Left Ctrl + Shift + Use on the ship |
 
 ## Config
 
@@ -38,9 +43,11 @@ Every setting lives in `matt.valheim.kmartboysmusthavemod.cfg` and shows up in C
 - **Messages:** center and summary messages on/off, plus every bit of wording
 - **Center Message Tiers:** six tiers, each with its own minimum item count and message
 - **Craft From Containers:** on/off, building on/off, container radius, ignore carts and ships, only player-built chests, requirement colors
-- **Auto Refuel:** on/off, check interval, radius, fires/ovens/smelters toggles, ore/refinery/kiln/windmill/spinning wheel toggles, refill threshold, fuel reserve, use inventory fuel, excluded objects
+- **Auto Refuel:** on/off, check interval, radius, fires/ovens/smelters toggles, ore/refinery/kiln/windmill/spinning wheel toggles, refill threshold, fuel reserve, leave 1 in each chest, use inventory fuel, excluded objects
 - **Auto Repair:** on/off, repair message on/off
 - **Clock:** on/off, text ({time}, {weather}, {conditions}, {day}), minute rounding, position, offset, font size, color
+- **Ships & Banners:** edit key, show images from everyone / trusted players / nobody, trusted player list, favorite sail image, fit/flip banner images, ship names, floating name distance, height, size and color
+- **Sorting:** on/off, sort mode, keep hotbar in place, merge stacks, button positions
 - **Death Message:** on/off, your own messages (several separated by |, one picked at random, {name} = your name), shout or nearby chat
 - **Crafting Stock:** on/off, build menu too, text format, colors, font size, position, storage radius, refresh rate
 
