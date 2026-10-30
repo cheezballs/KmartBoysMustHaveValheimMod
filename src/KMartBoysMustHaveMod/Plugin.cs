@@ -7,6 +7,8 @@
 //   * Craft / upgrade / build with materials from nearby containers
 //   * Auto-refuel fires, ovens and smelters from nearby containers
 //   * Announces your deaths in chat
+//   * Auto-repairs your gear when you open a crafting station
+//   * 12-hour in-game clock with the current weather
 //   * Everything configurable, Configuration Manager friendly, live config reload
 
 using System;
@@ -26,7 +28,7 @@ namespace KMartBoysMustHaveMod
     {
         public const string PluginGuid = "matt.valheim.kmartboysmusthavemod";
         public const string PluginName = "K-MartBoysMustHaveMod";
-        public const string PluginVersion = "1.8.0";
+        public const string PluginVersion = "1.10.0";
 
         internal static KMartBoysPlugin Instance;
 
@@ -87,6 +89,16 @@ namespace KMartBoysMustHaveMod
         internal static ConfigEntry<bool> DeathMessageEnabled;
         internal static ConfigEntry<string> DeathMessages;
         internal static ConfigEntry<DeathChatChannel> DeathMessageChannel;
+        internal static ConfigEntry<bool> AutoRepairEnabled;
+        internal static ConfigEntry<bool> AutoRepairShowMessage;
+        internal static ConfigEntry<bool> ClockEnabled;
+        internal static ConfigEntry<string> ClockFormat;
+        internal static ConfigEntry<int> ClockMinuteStep;
+        internal static ConfigEntry<ClockAnchor> ClockPosition;
+        internal static ConfigEntry<float> ClockOffsetX;
+        internal static ConfigEntry<float> ClockOffsetY;
+        internal static ConfigEntry<float> ClockFontSize;
+        internal static ConfigEntry<Color> ClockColor;
 
         private const int TierCount = 6;
         private static readonly int[] DefaultTierMin = { 1, 2, 10, 50, 200, 500 };
@@ -273,6 +285,29 @@ namespace KMartBoysMustHaveMod
             DeathMessageChannel = Bind(death, "Channel", "Chat channel", DeathChatChannel.Shout,
                 "Shout = everyone in the world sees it. Normal = only players near you.");
 
+            const string repair = "10 - Auto Repair";
+            AutoRepairEnabled = Bind(repair, "Enabled", "Auto repair at stations", true,
+                "When you open a crafting station, repair everything in your inventory that station can repair.");
+            AutoRepairShowMessage = Bind(repair, "ShowMessage", "Show repair message", true,
+                "Show \"Repaired N items\" when something was repaired.");
+
+            const string clock = "11 - Clock";
+            ClockEnabled = Bind(clock, "Enabled", "Show clock", true, "Show an in-game 12-hour clock with the current weather.");
+            ClockFormat = Bind(clock, "Format", "Clock text", "{time}  |  {weather}",
+                "Placeholders: {time} = e.g. 7:45 PM, {weather} = current weather, {conditions} = Cold/Freezing/Wet, " +
+                "{day} = day number. \\n = new line. Example: Day {day}  {time}  {weather} ({conditions})");
+            ClockMinuteStep = Bind(clock, "MinuteStep", "Round minutes to", 1,
+                "Show the time in steps of this many minutes (1 = every minute, 5 = 7:45, 7:50...).",
+                new AcceptableValueRange<int>(1, 60));
+            ClockPosition = Bind(clock, "Position", "Screen position", ClockAnchor.TopCenter,
+                "Which corner/edge of the screen the clock sits in.");
+            ClockOffsetX = Bind(clock, "OffsetX", "Offset X", 0f, "Move the clock left (-) or right (+), in UI pixels.",
+                new AcceptableValueRange<float>(-2000f, 2000f));
+            ClockOffsetY = Bind(clock, "OffsetY", "Offset Y", -10f, "Move the clock up (+) or down (-), in UI pixels.",
+                new AcceptableValueRange<float>(-2000f, 2000f));
+            ClockFontSize = Bind(clock, "FontSize", "Font size", 22f, "Clock text size.", new AcceptableValueRange<float>(8f, 60f));
+            ClockColor = Bind(clock, "Color", "Text color", new Color(1f, 0.93f, 0.75f, 1f), "Clock text color.");
+
             _harmony = new Harmony(PluginGuid);
             _harmony.PatchAll(Assembly.GetExecutingAssembly());
 
@@ -331,6 +366,9 @@ namespace KMartBoysMustHaveMod
         // Set at startup if an overlapping mod is loaded; our matching feature then stays off.
         internal static bool OtherCraftModLoaded;
         internal static bool OtherRefuelModLoaded;
+        internal static bool OtherRepairModLoaded;
+
+        private static readonly string[] RepairMods = { "mtsukn.AutoRepair", "Tekla.AutoRepair", "aedenthorn.AutoRepair" };
 
         private static readonly string[] CraftFromContainerMods =
         {
@@ -350,6 +388,13 @@ namespace KMartBoysMustHaveMod
                 Logger.LogWarning("Another craft-from-containers mod is installed (" + guid + "). " +
                                   "This mod's Craft From Containers is turned OFF to avoid counting chests twice. Remove that mod to use ours.");
             }
+            foreach (string guid in RepairMods)
+            {
+                if (!BepInEx.Bootstrap.Chainloader.PluginInfos.ContainsKey(guid)) continue;
+                OtherRepairModLoaded = true;
+                Logger.LogWarning("Another auto-repair mod is installed (" + guid + "). " +
+                                  "This mod's Auto Repair is turned OFF. Remove that mod to use ours.");
+            }
             foreach (string guid in RefuelMods)
             {
                 if (!BepInEx.Bootstrap.Chainloader.PluginInfos.ContainsKey(guid)) continue;
@@ -368,6 +413,7 @@ namespace KMartBoysMustHaveMod
         private void Update()
         {
             ReloadConfigIfChanged();
+            ClockHud.Tick();
             if (!ModEnabled.Value) return;
             Player player = Player.m_localPlayer;
             if (player == null) return;

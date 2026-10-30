@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.10.0
+- **In-game clock:** a 12-hour clock with AM/PM and the current weather (Clear, Rain, Thunderstorm, Snowstorm, Ash Rain...) at the top of the screen. Change the text ({time}, {weather}, {conditions}, {day}), minute rounding, screen position, offset, font size and color in "11 - Clock". It hides when you hide the HUD.
+
+## 1.9.0
+- **Auto repair:** opening a crafting station repairs everything in your inventory that the station can repair, all at once. It follows the game's normal station and level rules. Settings are in "10 - Auto Repair".
+- If another auto-repair mod is installed, this feature turns itself off and logs a warning.
+
 ## 1.8.0
 - **Death announcements:** when you die, you shout "I WAS AN IDIOT AND I DIED HAHAHAHAHAHA" in chat. Set your own messages (several, picked at random), use {name}, or switch to nearby-only chat in "9 - Death Message".
 

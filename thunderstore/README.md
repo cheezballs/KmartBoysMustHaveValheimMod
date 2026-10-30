@@ -15,6 +15,8 @@
 - .stsehc emas esoht morf yllacitamotua deleufer teg uoy raen sretlems dna snevo ,sbut toh ,sehcrot ,sreizarb ,shtraeh ,seriF
 - .oot stsehc esoht morf xalf dna yelrab ,doow ,eussit tfos ,parcs ,ero htiw dellif teg sleehw gninnips dna sllimdniw ,snlik ,seirenifer rtie ,secanruf tsalb ,sretlemS
 - .sexob egarots ruoy ni gnittis era ynam woh dna yrrac uoy ynam woh swohs lairetam deriuqer yreve ,noitats gnitfarc a tA
+- .og eno ni ,xif nac noitats eht taht raeg ruoy lla sriaper noitats gnitfarc a gninepO
+- .neercs ruoy fo pot eht ta stis rehtaew tnerruc eht dna MP/MA htiw kcolc ruoh-21 A
 - .yojne ot enoyreve rof tahc ni "AHAHAHAHAHAH DEID I DNA TOIDI NA SAW I" tuohs uoy ,eid uoy nehW
 - .revres a no neve ,ti deen uoy ylnO .ylno edis tneilC
 
@@ -37,6 +39,8 @@
 - egassem dna tnuoc meti muminim nwo sti htiw hcae ,sreit xis **:sreiT egasseM retneC**
 - sroloc tnemeriuqer ,stsehc tliub-reyalp ylno ,spihs dna strac erongi ,suidar reniatnoc ,ffo/no gnidliub ,ffo/no **:sreniatnoC morF tfarC**
 - stcejbo dedulcxe ,leuf yrotnevni esu ,evreser leuf ,dlohserht llifer ,selggot leehw gninnips/llimdniw/nlik/yrenifer/ero ,selggot sretlems/snevo/serif ,suidar ,lavretni kcehc ,ffo/no **:leufeR otuA**
+- ffo/no egassem riaper ,ffo/no **:riapeR otuA**
+- roloc ,ezis tnof ,tesffo ,noitisop ,gnidnuor etunim ,)}yad{ ,}snoitidnoc{ ,}rehtaew{ ,}emit{( txet ,ffo/no **:kcolC**
 - tahc ybraen ro tuohs ,)eman ruoy = }eman{ ,modnar ta dekcip eno ,| yb detarapes lareves( segassem nwo ruoy ,ffo/no **:egasseM htaeD**
 - etar hserfer ,suidar egarots ,noitisop ,ezis tnof ,sroloc ,tamrof txet ,oot unem dliub ,ffo/no **:kcotS gnitfarC**
 

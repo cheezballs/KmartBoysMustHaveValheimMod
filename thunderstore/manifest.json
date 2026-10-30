@@ -1,8 +1,8 @@
 {
   "name": "KMartBoysMustHaveMod",
-  "version_number": "1.8.0",
+  "version_number": "1.10.0",
   "website_url": "https://github.com/cheezballs/KmartBoysMustHaveValheimMod",
-  "description": "All-in-one: F6 deposits into matching chests, craft and build from nearby containers, auto-fill fires, smelters and kilns with fuel and ore, slot locks, and shame in chat when you die.",
+  "description": "All-in-one: F6 deposits into chests, craft/build from nearby chests, auto-fill fires and smelters, auto-repair, 12-hour clock with weather, slot locks, and shame in chat when you die.",
   "dependencies": [
     "denikson-BepInExPack_Valheim-5.4.2360"
   ]
