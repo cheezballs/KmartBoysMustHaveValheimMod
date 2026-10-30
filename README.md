@@ -5,10 +5,13 @@ A Valheim BepInEx mod for the K-Mart Boys. It's on Thunderstore as **KMartBoysMu
 ## Features
 
 - **Auto-deposit (F6):** pushes everything in your inventory into nearby chests that already hold the same item. It tops up existing stacks first, then uses empty slots, nearest chest first.
-- **Filters:** it can skip the hotbar and equipped gear. It never deposits the item you're dragging.
+- **Filters:** it can skip the hotbar, equipped gear and ammo (arrows, bolts). It never deposits the item you're dragging.
 - **Slot locking:** middle-click an inventory slot to lock it. Locked slots get a purple marker and are never deposited. Locks are saved per character.
 - **Messages:** a center-screen "Great Job, Jackass" message whose wording scales with how much you deposited, plus a small summary in the top-left.
+- **Craft from containers:** crafting, upgrading and building can use materials from containers within a configurable radius. Your inventory is used first, then the nearest containers.
+- **Auto refill:** every few seconds, fires, hearths, braziers, torches, hot tubs, ovens and smelters near you are topped up with fuel from those same containers. Smelters, blast furnaces, eitr refineries, kilns, windmills and spinning wheels also get their inputs (ore, scrap, soft tissue, wood, barley, flax).
 - **Crafting stock:** at a crafting station, each required material shows how many you carry, how many are in your storage boxes, and the total. It's green when you have enough and orange when you're short.
+- **Death announcements:** when you die, you shout "I WAS AN IDIOT AND I DIED HAHAHAHAHAHA" in chat. The messages are configurable.
 - **Compatibility:** detects Equipment and Quick Slots and never touches its equipment, quick-slot or quiver cells.
 - **Safety:** skips graves, chests someone else has open, private chests you don't own, and chests in wards you can't access.
 - **Fully configurable:** every option works in Configuration Manager (F1), and editing the .cfg file while the game runs takes effect immediately.
@@ -23,6 +26,10 @@ src/KMartBoysMustHaveMod/      C# source + project file
   SlotLocks.cs                 Locked-slot storage (saved in the character's custom data)
   SlotLockUi.cs                Middle-click locking + the purple slot marker
   CraftingStock.cs             Material counts under crafting requirements
+  ContainerSource.cs           Nearby-container resource pool (filters, counting, removal)
+  CraftFromContainers.cs       Craft / upgrade / build using container materials
+  DeathMessage.cs              Chat announcement when you die
+  Refueler.cs                  Auto-refill fuel and inputs (fires, ovens, smelters, refineries, kilns...)
   ModCompat.cs                 Equipment and Quick Slots soft compatibility
   ConfigurationManagerAttributes.cs
 thunderstore/                  manifest.json, icon.png, README.md (backwards), CHANGELOG.md

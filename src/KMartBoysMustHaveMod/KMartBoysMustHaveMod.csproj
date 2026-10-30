@@ -11,7 +11,7 @@
     <AssemblyName>K-MartBoysMustHaveMod</AssemblyName>
     <RootNamespace>KMartBoysMustHaveMod</RootNamespace>
     <!-- Keep in sync with PluginVersion in Plugin.cs and version_number in thunderstore/manifest.json -->
-    <Version>1.5.0</Version>
+    <Version>1.8.0</Version>
     <LangVersion>9.0</LangVersion>
     <Nullable>disable</Nullable>
     <ImplicitUsings>disable</ImplicitUsings>

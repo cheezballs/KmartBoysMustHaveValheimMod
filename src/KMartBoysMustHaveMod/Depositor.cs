@@ -93,6 +93,7 @@ namespace KMartBoysMustHaveMod
             if (item == dragItem) return false;
             if (KMartBoysPlugin.IgnoreEquipped.Value && item.m_equipped) return false;
             if (KMartBoysPlugin.IgnoreHotbar.Value && item.m_gridPos.y == 0) return false;
+            if (KMartBoysPlugin.IgnoreAmmo.Value && item.m_shared.m_itemType == ItemDrop.ItemData.ItemType.Ammo) return false;
             if (ModCompat.IsSpecialSlot(item.m_gridPos)) return false; // EAQS equipment / quick / quiver slots
             if (KMartBoysPlugin.SlotLockEnabled.Value && lockedSlots.Contains(SlotLocks.Key(item.m_gridPos))) return false;
             if (!KMartBoysPlugin.DepositNonStackables.Value && item.m_shared.m_maxStackSize <= 1) return false;
